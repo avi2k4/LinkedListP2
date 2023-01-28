@@ -1,3 +1,9 @@
+/*
+ * Sorted linked List add, print, insert, and average implementation in C++
+ * Avighnash Kumar
+ * January 27, 2023
+ */
+
 #include <iostream>
 #include <cstring>
 #include "Node.h"
@@ -69,7 +75,12 @@ int main() {
 			std::cout << "\nAverage GPA of all students: " << average(head) << std::endl;
 		}
 		else if (strcmp(input, "PRINT") == 0) {
-			print(head);
+			if (head == NULL) {
+				std::cout << "\nThere are no elements to print!\n" << std::endl;
+			}
+			else {
+				print(head);
+			}
 		}
 		else if (strcmp(input, "QUIT") == 0) {
 			break;
@@ -95,6 +106,7 @@ void add(Node * & head, Node * new_node) {
 		return;
 	}
 
+	// Find the node where its ID is less than the new nodes ID and the following nodes ID is greater than the current node, as that is where the new node will be fit in
 	if (head->getStudent()->getID() < new_node->getStudent()->getID() && head->getNext()->getStudent()->getID() > new_node->getStudent()->getID()) {
 		Node * temp = head->getNext();
 		new_node->setNext(temp);
@@ -107,20 +119,19 @@ void add(Node * & head, Node * new_node) {
 }
 
 void print(Node * head) {
+	// If the node isn't null, print out information
 	if (head != NULL) {
 		std::cout << std::endl;
 		head->getStudent()->print();
 		std::cout << "----------------" << std::endl;
 		print(head->getNext());
 	}
-	else {
-		std::cout << "\nThere are no students in the database!" << std::endl;
-	}
 }
 
 void delete_node(Node * & head, int id) {
 	if (head == NULL) return;
 
+	// Because ID is supposed to be unique, the first node with the ID is deleted and the function exits scope
 	if (head->getStudent()->getID() == id) {
 		Node * temp = head;
 		head = head->getNext();
@@ -132,6 +143,8 @@ void delete_node(Node * & head, int id) {
 	delete_node(temp, id);
 }
 
+// If the head isn't null, call the function with the cumulative with the current nodes GPA and increment the count
+// Accounts for case where head is NULL so count is zero, thus the average is zero
 double average(Node * head, double cumulative, int count) {
 	return (head != NULL) ? average(head->getNext(), cumulative + head->getStudent()->getGPA(), count + 1) : (count > 0) ? cumulative / count : 0;
 }
